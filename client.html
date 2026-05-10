@@ -353,7 +353,8 @@ let selUid=null, attackUid=null, gs=null, extInfo={};
 let chatUnread=0, chatOpen=false;
 
 function connect() {
-  ws = new WebSocket(`ws://${location.host}`);
+  const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  ws = new WebSocket(`${proto}//${location.host}`);
   ws.onmessage = e => handle(JSON.parse(e.data));
   ws.onclose   = () => toast('Connexion perdue — rechargez');
   ws.onerror   = () => toast('Erreur de connexion');
