@@ -5,237 +5,293 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>SmileLife</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-:root {
-  --bg:       #0d0d14;
-  --surf:     #15151e;
-  --surf2:    #1c1c28;
-  --border:   rgba(255,255,255,0.08);
-  --text:     #e8e8f0;
-  --muted:    #6b6b82;
-  --accent:   #f5c542;
-  --green:    #34c472;
-  --red:      #e04060;
-  --blue:     #4a8fea;
-  --r:        12px;
-  --rs:       8px;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0c0c14;--surf:#13131d;--surf2:#1a1a27;--surf3:#22222f;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#eaeaf8;--muted:#606080;
+  --accent:#f5c040;--accent-dim:rgba(245,192,64,0.12);
+  --green:#2ec46c;--red:#e03858;--blue:#4890f0;--purple:#9060e8;
+  --r:13px;--rs:9px;
 }
-html, body { height: 100%; background: var(--bg); color: var(--text); font-family: -apple-system,'Segoe UI',sans-serif; font-size: 15px; overflow: hidden; }
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;font-size:15px;overflow:hidden;line-height:1.5}
+.screen{display:none;height:100%;flex-direction:column}
+.screen.active{display:flex}
+.scroll{overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
+.scroll::-webkit-scrollbar{display:none}
 
-/* screens */
-.screen { display:none; height:100%; flex-direction:column; }
-.screen.active { display:flex; }
-.scrollable { overflow-y:auto; flex:1; -webkit-overflow-scrolling:touch; }
-.scrollable::-webkit-scrollbar { display:none; }
+/* ── inputs ── */
+input{width:100%;padding:11px 14px;background:var(--surf2);border:1.5px solid var(--border2);border-radius:var(--rs);color:var(--text);font:inherit;outline:none;transition:border-color .2s}
+input:focus{border-color:var(--accent)}
+input::placeholder{color:var(--muted)}
+#input-code{text-transform:uppercase;letter-spacing:6px;text-align:center;font-size:1.3rem;font-weight:900}
 
-/* typo */
-.title { font-size:2.2rem; font-weight:800; letter-spacing:-1px; }
-.accent { color:var(--accent); }
-.label  { font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }
-.muted  { color:var(--muted); }
-
-/* inputs */
-input {
-  width:100%; padding:12px 14px;
-  background:var(--surf2); border:1.5px solid var(--border);
-  border-radius:var(--rs); color:var(--text);
-  font:inherit; outline:none; transition:border-color .2s;
-}
-input:focus { border-color:var(--accent); }
-input::placeholder { color:var(--muted); }
-#input-code { text-transform:uppercase; letter-spacing:6px; text-align:center; font-size:1.3rem; font-weight:800; }
-
-/* buttons */
-.btn {
-  display:inline-flex; align-items:center; justify-content:center; gap:6px;
-  padding:10px 18px; border:none; border-radius:30px;
-  font:inherit; font-size:.88rem; font-weight:700; cursor:pointer;
-  transition:transform .12s, opacity .15s; user-select:none; white-space:nowrap;
-}
-.btn:active:not(:disabled) { transform:scale(.95); }
-.btn:disabled { opacity:.3; cursor:not-allowed; }
-.btn-p { background:var(--accent); color:#000; }
-.btn-g { background:transparent; color:var(--text); border:1.5px solid var(--border); }
-.btn-r { background:var(--red); color:#fff; }
-.btn-sm { padding:7px 14px; font-size:.8rem; }
-.btn-full { width:100%; }
-
-/* panel */
-.panel { background:var(--surf); border:1.5px solid var(--border); border-radius:var(--r); padding:16px; }
-.divider { height:1px; background:var(--border); }
-.or { display:flex; align-items:center; gap:10px; color:var(--muted); font-size:.8rem; }
-.or::before,.or::after { content:''; flex:1; height:1px; background:var(--border); }
+/* ── buttons ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 18px;border:none;border-radius:30px;font:inherit;font-size:.88rem;font-weight:800;cursor:pointer;transition:transform .12s,opacity .15s;user-select:none;white-space:nowrap}
+.btn:active:not(:disabled){transform:scale(.95)}
+.btn:disabled{opacity:.3;cursor:not-allowed}
+.btn-p{background:var(--accent);color:#000}
+.btn-g{background:transparent;color:var(--text);border:1.5px solid var(--border2)}
+.btn-sm{padding:7px 14px;font-size:.8rem}
+.btn-full{width:100%}
+.or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.8rem}
+.or::before,.or::after{content:'';flex:1;height:1px;background:var(--border2)}
 
 /* ══════ CONNECT ══════ */
-#connect-screen { padding:24px; gap:18px; align-items:center; justify-content:center; text-align:center; }
-#connect-screen .panel { width:100%; max-width:360px; display:flex; flex-direction:column; gap:12px; text-align:left; }
+#connect-screen{padding:24px;gap:18px;align-items:center;justify-content:center;text-align:center}
+.logo{font-size:2.8rem;font-weight:900;letter-spacing:-1px;line-height:1}
+.logo span{color:var(--accent)}
+.panel{background:var(--surf);border:1.5px solid var(--border2);border-radius:var(--r);padding:18px;width:100%;max-width:360px;display:flex;flex-direction:column;gap:12px;text-align:left}
+.lbl{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:5px}
 
 /* ══════ LOBBY ══════ */
-#lobby-screen { overflow:hidden; }
-#lobby-top { display:flex; align-items:center; padding:14px 16px; border-bottom:1px solid var(--border); flex-shrink:0; gap:10px; }
-#lobby-top .title { font-size:1.3rem; }
-#lobby-scroll { padding:16px; display:flex; flex-direction:column; gap:14px; }
+#lobby-screen{overflow:hidden}
+#lobby-top{display:flex;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border);flex-shrink:0;gap:10px}
+#lobby-top .logo{font-size:1.4rem}
+#lobby-body{padding:16px;display:flex;flex-direction:column;gap:14px}
+.code-box{background:var(--surf2);border:2px solid var(--accent);border-radius:var(--r);padding:14px;text-align:center}
+.code-val{font-size:2.8rem;font-weight:900;letter-spacing:10px;color:var(--accent);line-height:1}
+.code-url{font-size:.68rem;color:var(--muted);margin-top:5px}
+.p-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surf2);border:1px solid var(--border);border-radius:var(--rs)}
+.p-em{font-size:1.4rem}
+.p-nm{flex:1;font-weight:700;font-size:.9rem}
+.p-host{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;background:var(--accent-dim);color:var(--accent);border-radius:4px;padding:2px 6px}
+.ext-item{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--surf2);border:1.5px solid var(--border);border-radius:var(--rs);transition:border-color .2s,background .2s}
+.ext-item.host-clickable{cursor:pointer}
+.ext-item.host-clickable:active{transform:scale(.98)}
+.ext-item.on{border-color:var(--accent);background:var(--accent-dim)}
+.ext-item.locked{opacity:.5}
+.ext-em{font-size:1.5rem;flex-shrink:0}
+.ext-inf{flex:1;min-width:0}
+.ext-nm{font-weight:800;font-size:.88rem}
+.ext-dc{font-size:.68rem;color:var(--muted)}
+.ext-chk{width:20px;height:20px;border-radius:50%;border:2px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900;transition:all .2s;color:transparent}
+.ext-item.on .ext-chk{background:var(--accent);border-color:var(--accent);color:#000}
 
-.code-box { background:var(--surf2); border:1.5px solid var(--accent); border-radius:var(--r); padding:14px; text-align:center; }
-.code-val  { font-size:2.6rem; font-weight:900; letter-spacing:8px; color:var(--accent); line-height:1; }
-.code-url  { font-size:.7rem; color:var(--muted); margin-top:4px; }
+/* ══════ GAME TOPBAR ══════ */
+#game-screen{overflow:hidden}
+#g-top{display:flex;align-items:center;padding:9px 14px;border-bottom:1px solid var(--border);flex-shrink:0;gap:8px}
+.g-brand{font-weight:900;font-size:1rem}
+.g-brand span{color:var(--accent)}
+#g-turn{flex:1;text-align:center;font-size:.8rem;color:var(--muted)}
+#g-turn strong{color:var(--text);font-weight:800}
 
-.p-item { display:flex; align-items:center; gap:10px; padding:9px 12px; background:var(--surf2); border:1px solid var(--border); border-radius:var(--rs); }
-.p-em   { font-size:1.4rem; }
-.p-nm   { flex:1; font-weight:600; font-size:.9rem; }
-.p-host { font-size:.62rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; background:rgba(245,197,66,.15); color:var(--accent); border-radius:4px; padding:2px 6px; }
+/* timer ring */
+#timer-wrap{position:relative;width:34px;height:34px;flex-shrink:0}
+#timer-svg{width:34px;height:34px;transform:rotate(-90deg)}
+#timer-bg{fill:none;stroke:var(--surf3);stroke-width:3}
+#timer-arc{fill:none;stroke:var(--green);stroke-width:3;stroke-linecap:round;transition:stroke-dashoffset .9s linear,stroke .5s}
+#timer-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:900;color:var(--text)}
 
-/* Extension items — pointer-events fix */
-.ext-item {
-  display:flex; align-items:center; gap:12px;
-  padding:11px 14px; background:var(--surf2);
-  border:1.5px solid var(--border); border-radius:var(--rs);
-  transition:border-color .2s, background .2s;
-  /* pointer-events always on — JS gère le disabled */
+/* tabs */
+#tab-bar{display:flex;border-bottom:1px solid var(--border);flex-shrink:0}
+.tab{flex:1;padding:8px 0;text-align:center;font-size:.78rem;font-weight:800;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;position:relative}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+#chat-badge{position:absolute;top:5px;right:calc(50% - 24px);background:var(--red);color:#fff;font-size:.55rem;font-weight:900;border-radius:8px;padding:1px 4px;display:none}
+
+.tab-panel{display:none;flex:1;flex-direction:column;overflow:hidden}
+.tab-panel.active{display:flex}
+
+/* ── game body ── */
+#game-body{padding:8px 10px;gap:7px;display:flex;flex-direction:column}
+
+/* opponent zone */
+.opp{padding:9px 11px;border-radius:var(--rs);background:var(--surf);border:1px solid var(--border)}
+.opp.cur{border-color:var(--accent)}
+.opp-hd{display:flex;align-items:center;gap:7px;margin-bottom:6px}
+.opp-em{font-size:1.2rem}
+.opp-nm{flex:1;font-weight:800;font-size:.85rem}
+.opp-cards{font-size:.68rem;color:var(--muted)}
+.opp-sc{font-weight:900;font-size:.88rem;color:var(--accent)}
+.opp-life{display:flex;flex-wrap:wrap;gap:4px}
+
+/* ── MINI CARD (life zone) ── */
+.mc{
+  display:flex;align-items:center;gap:4px;
+  padding:3px 8px 3px 5px;border-radius:7px;
+  font-size:.68rem;font-weight:700;
+  border:1px solid rgba(255,255,255,0.12);
+  position:relative;overflow:hidden;
 }
-.ext-item.host-clickable { cursor:pointer; }
-.ext-item.host-clickable:active { transform:scale(.98); }
-.ext-item.on  { border-color:var(--accent); background:rgba(245,197,66,.06); }
-.ext-item.locked { opacity:.55; }
-.ext-em   { font-size:1.5rem; flex-shrink:0; }
-.ext-inf  { flex:1; min-width:0; }
-.ext-nm   { font-weight:700; font-size:.88rem; }
-.ext-dc   { font-size:.7rem; color:var(--muted); }
-.ext-chk  { width:20px; height:20px; border-radius:50%; border:2px solid var(--border); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:.68rem; font-weight:800; transition:all .2s; color:transparent; }
-.ext-item.on .ext-chk { background:var(--accent); border-color:var(--accent); color:#000; }
-
-/* ══════ GAME ══════ */
-#game-screen { overflow:hidden; }
-
-/* topbar */
-#g-top { display:flex; align-items:center; padding:9px 14px; border-bottom:1px solid var(--border); flex-shrink:0; gap:8px; }
-.g-brand { font-weight:800; font-size:.95rem; }
-.g-turn  { flex:1; text-align:center; font-size:.8rem; color:var(--muted); }
-.g-turn strong { color:var(--text); }
-.g-deck  { font-size:.75rem; color:var(--muted); }
-
-/* tab bar */
-#tab-bar { display:flex; border-bottom:1px solid var(--border); flex-shrink:0; }
-.tab { flex:1; padding:9px 0; text-align:center; font-size:.8rem; font-weight:700; color:var(--muted); cursor:pointer; border-bottom:2px solid transparent; transition:color .2s, border-color .2s; position:relative; }
-.tab.active { color:var(--accent); border-bottom-color:var(--accent); }
-#chat-badge { position:absolute; top:6px; right:calc(50% - 22px); background:var(--red); color:#fff; font-size:.55rem; font-weight:800; border-radius:8px; padding:1px 4px; display:none; }
-
-/* tab panels */
-.tab-panel { display:none; flex:1; flex-direction:column; overflow:hidden; }
-.tab-panel.active { display:flex; }
-
-/* game panel */
-#game-body { padding:10px 12px; gap:8px; display:flex; flex-direction:column; }
-
-/* opponent */
-.opp { padding:10px 12px; border-radius:var(--rs); background:var(--surf); border:1px solid var(--border); }
-.opp.cur { border-color:var(--accent); }
-.opp-hd  { display:flex; align-items:center; gap:8px; margin-bottom:7px; }
-.opp-em  { font-size:1.25rem; }
-.opp-nm  { flex:1; font-weight:600; font-size:.87rem; }
-.opp-cnt { font-size:.7rem; color:var(--muted); }
-.opp-sc  { font-weight:800; font-size:.88rem; color:var(--accent); }
-/* mini-cards in opp life */
-.opp-life { display:flex; flex-wrap:wrap; gap:5px; }
-.mini-card {
-  display:flex; align-items:center; gap:4px;
-  padding:4px 8px; border-radius:7px; border:1px solid rgba(255,255,255,.1);
-  font-size:.7rem; font-weight:600;
-}
-.mc-study   { background:#0f2540; } .mc-job { background:#0f2818; }
-.mc-love    { background:#30080f; } .mc-family { background:#281508; }
-.mc-home    { background:#1e1508; } .mc-leisure { background:#180c28; }
-.mc-money   { background:#0c2010; } .mc-attack { background:#280010; }
-.mc-event   { background:#0a0a28; }
+.mc::before{content:'';position:absolute;inset:0;opacity:.18;border-radius:inherit}
+.mc-study  {background:#0d2048;color:#a8ccff} .mc-study::before{background:linear-gradient(135deg,#1060c0,transparent)}
+.mc-job    {background:#0d2814;color:#8adcaa} .mc-job::before{background:linear-gradient(135deg,#10804a,transparent)}
+.mc-love   {background:#280810;color:#ffaac8} .mc-love::before{background:linear-gradient(135deg,#a01840,transparent)}
+.mc-family {background:#281408;color:#ffcc88} .mc-family::before{background:linear-gradient(135deg,#904020,transparent)}
+.mc-home   {background:#1e1408;color:#ffe090} .mc-home::before{background:linear-gradient(135deg,#806010,transparent)}
+.mc-leisure{background:#140a28;color:#c0a0ff} .mc-leisure::before{background:linear-gradient(135deg,#5030a0,transparent)}
+.mc-money  {background:#0a1c0c;color:#90e8a0} .mc-money::before{background:linear-gradient(135deg,#208040,transparent)}
+.mc-attack {background:#280010;color:#ff9090} .mc-attack::before{background:linear-gradient(135deg,#901028,transparent)}
+.mc-event  {background:#0a0a28;color:#a0b8ff} .mc-event::before{background:linear-gradient(135deg,#2828a0,transparent)}
+.mc span{position:relative;z-index:1}
 
 /* my zone */
-#my-zone { margin:0 12px; padding:11px 12px; border-radius:var(--rs); background:var(--surf); border:1.5px solid rgba(52,196,114,.25); }
-#my-hd   { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
-#my-em   { font-size:1.5rem; }
-#my-nm   { flex:1; font-weight:700; }
-#my-sc   { font-weight:800; color:var(--accent); }
-#my-life { display:flex; flex-wrap:wrap; gap:5px; min-height:20px; }
+#my-zone{margin:0 10px;padding:10px 11px;border-radius:var(--rs);background:var(--surf);border:1.5px solid rgba(46,196,108,.22)}
+#my-hd{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+#my-em{font-size:1.5rem}
+#my-nm{flex:1;font-weight:900}
+#my-sc{font-weight:900;color:var(--accent)}
+#my-life{display:flex;flex-wrap:wrap;gap:4px;min-height:18px}
 
-/* hand */
-#hand-hd { display:flex; align-items:center; justify-content:space-between; padding:6px 14px 3px; flex-shrink:0; }
-#sel-nm  { font-size:.78rem; color:var(--accent); font-weight:600; max-width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-#hand-row { display:flex; gap:8px; padding:4px 12px 8px; overflow-x:auto; flex-shrink:0; }
-#hand-row::-webkit-scrollbar { display:none; }
+/* log */
+#log-box{margin:2px 0 0;background:var(--surf);border-radius:var(--rs);padding:7px 10px;max-height:70px;overflow-y:auto;font-size:.7rem}
+#log-box::-webkit-scrollbar{display:none}
+.log-ln{padding:1px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.log-ln:last-child{border-bottom:none}
 
-/* game card */
-.gc {
-  flex-shrink:0; width:98px; height:144px; border-radius:11px;
-  border:1.5px solid rgba(255,255,255,.1); padding:7px 6px;
-  display:flex; flex-direction:column; align-items:center; gap:2px;
-  cursor:pointer; transition:transform .14s, box-shadow .14s;
-  position:relative; user-select:none; overflow:hidden;
+/* hand bar */
+#hand-hd{display:flex;align-items:center;justify-content:space-between;padding:5px 13px 3px;flex-shrink:0}
+#hand-hd .lbl{margin:0}
+#sel-nm{font-size:.75rem;color:var(--accent);font-weight:700;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ══════════════════════════════════════
+   GAME CARD — redesign complet
+══════════════════════════════════════ */
+#hand-row{display:flex;gap:9px;padding:4px 12px 10px;overflow-x:auto;flex-shrink:0}
+#hand-row::-webkit-scrollbar{display:none}
+
+.gc{
+  flex-shrink:0;
+  width:105px;height:155px;
+  border-radius:14px;
+  cursor:pointer;
+  user-select:none;
+  position:relative;
+  overflow:hidden;
+  transition:transform .16s cubic-bezier(.34,1.56,.64,1), box-shadow .16s;
+  /* Ombre physique */
+  box-shadow:0 4px 12px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.08);
 }
-.gc:active { transform:scale(.94); }
-.gc.sel { transform:translateY(-9px); box-shadow:0 10px 22px rgba(245,197,66,.45); border-color:var(--accent); }
-.gc.gc-study   { background:linear-gradient(155deg,#0c1e38,#1a4a85); }
-.gc.gc-job     { background:linear-gradient(155deg,#0c2218,#1a5535); }
-.gc.gc-love    { background:linear-gradient(155deg,#2a0610,#78183a); }
-.gc.gc-family  { background:linear-gradient(155deg,#221205,#583810); }
-.gc.gc-home    { background:linear-gradient(155deg,#1c1405,#4a3818); }
-.gc.gc-leisure { background:linear-gradient(155deg,#140a28,#3a2070); }
-.gc.gc-attack  { background:linear-gradient(155deg,#280010,#78102a); }
-.gc.gc-event   { background:linear-gradient(155deg,#0a0a26,#1c1c70); }
-.gc.gc-money   { background:linear-gradient(155deg,#0a1c0c,#1c4c28); }
-.gc-pts  { font-size:.68rem; font-weight:800; color:rgba(255,255,255,.85); align-self:flex-start; }
-.gc-em   { font-size:1.9rem; margin:1px 0; }
-.gc-nm   { font-weight:700; font-size:.7rem; text-align:center; color:#fff; line-height:1.2; }
-.gc-dc   { font-size:.58rem; color:rgba(255,255,255,.5); text-align:center; line-height:1.2; }
-.gc-tp   { position:absolute; bottom:4px; left:0; right:0; text-align:center; font-size:.5rem; text-transform:uppercase; letter-spacing:.04em; color:rgba(255,255,255,.35); }
-
-/* actions */
-#act-bar { display:flex; gap:7px; padding:7px 12px 9px; border-top:1px solid var(--border); flex-shrink:0; }
-
-/* ══════ CHAT PANEL ══════ */
-#chat-panel { display:none; flex:1; flex-direction:column; overflow:hidden; }
-#chat-panel.active { display:flex; }
-
-#chat-msgs { padding:10px 14px; display:flex; flex-direction:column; gap:6px; }
-.chat-msg { display:flex; gap:8px; align-items:flex-start; }
-.chat-msg.mine { flex-direction:row-reverse; }
-.cm-em   { font-size:1.3rem; flex-shrink:0; line-height:1; margin-top:2px; }
-.cm-body { max-width:72%; }
-.cm-name { font-size:.62rem; color:var(--muted); margin-bottom:2px; }
-.chat-msg.mine .cm-name { text-align:right; }
-.cm-text {
-  padding:8px 12px; border-radius:12px; font-size:.85rem; line-height:1.4; word-break:break-word;
-  background:var(--surf2); border:1px solid var(--border);
+.gc:active{transform:scale(.93) !important}
+.gc.sel{
+  transform:translateY(-12px) scale(1.06);
+  box-shadow:0 18px 36px rgba(0,0,0,.6), 0 0 0 2px var(--accent), inset 0 1px 0 rgba(255,255,255,.15);
 }
-.chat-msg.mine .cm-text { background:rgba(245,197,66,.15); border-color:rgba(245,197,66,.25); }
-.chat-sys { text-align:center; font-size:.72rem; color:var(--muted); padding:2px 0; }
 
-#chat-input-row { display:flex; gap:8px; padding:8px 12px 10px; border-top:1px solid var(--border); flex-shrink:0; }
-#chat-input-row input { padding:9px 12px; font-size:.88rem; }
-#btn-send { padding:9px 14px; border-radius:30px; background:var(--accent); color:#000; font-weight:700; border:none; cursor:pointer; font-size:.85rem; flex-shrink:0; }
+/* Fond par catégorie — beau dégradé riche */
+.gc-study  {background:linear-gradient(160deg,#071830 0%,#0e3a78 55%,#1a5aae 100%)}
+.gc-job    {background:linear-gradient(160deg,#071f0f 0%,#0d4a28 55%,#166640 100%)}
+.gc-love   {background:linear-gradient(160deg,#200510 0%,#6a1030 55%,#a01848 100%)}
+.gc-family {background:linear-gradient(160deg,#1a0e06 0%,#5a3010 55%,#8a5020 100%)}
+.gc-home   {background:linear-gradient(160deg,#16110a 0%,#4a3a10 55%,#705a18 100%)}
+.gc-leisure{background:linear-gradient(160deg,#0c0820 0%,#301868 55%,#5028a8 100%)}
+.gc-attack {background:linear-gradient(160deg,#1a0008 0%,#6a0820 55%,#a01030 100%)}
+.gc-event  {background:linear-gradient(160deg,#080820 0%,#181868 55%,#2828a8 100%)}
+.gc-money  {background:linear-gradient(160deg,#061610 0%,#0c4022 55%,#186038 100%)}
 
-/* ══════ TARGET MODAL ══════ */
-#target-modal { display:none; position:fixed; inset:0; z-index:100; background:rgba(0,0,0,.72); align-items:flex-end; }
-#target-modal.open { display:flex; }
-#target-inner { width:100%; background:var(--surf); border-radius:18px 18px 0 0; padding:18px; display:flex; flex-direction:column; gap:10px; }
-#target-inner h3 { font-weight:800; }
-.t-row { display:flex; align-items:center; gap:10px; padding:11px 14px; background:var(--surf2); border:1.5px solid var(--border); border-radius:var(--rs); cursor:pointer; transition:border-color .15s; }
-.t-row:active { border-color:var(--red); }
-.t-nm  { flex:1; font-weight:600; }
-.t-sc  { font-weight:800; color:var(--accent); font-size:.88rem; }
+/* Reflet brillant en haut */
+.gc::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:50%;
+  background:linear-gradient(180deg,rgba(255,255,255,.12) 0%,transparent 100%);
+  border-radius:14px 14px 0 0;pointer-events:none;z-index:1;
+}
+/* Vignette bords */
+.gc::after{
+  content:'';position:absolute;inset:0;
+  box-shadow:inset 0 0 20px rgba(0,0,0,.4);
+  border-radius:14px;pointer-events:none;z-index:1;
+}
+/* Bordure subtile */
+.gc-inner{
+  position:absolute;inset:0;border-radius:14px;
+  border:1px solid rgba(255,255,255,.15);
+  display:flex;flex-direction:column;align-items:center;
+  padding:8px 7px 6px;z-index:2;
+}
+
+/* En-tête carte : type + points */
+.gc-head{
+  display:flex;align-items:center;justify-content:space-between;
+  width:100%;margin-bottom:4px;
+}
+.gc-type{
+  font-size:.55rem;font-weight:800;text-transform:uppercase;
+  letter-spacing:.07em;padding:2px 5px;border-radius:5px;
+  background:rgba(0,0,0,.35);color:rgba(255,255,255,.7);
+}
+.gc-pts{
+  font-size:.72rem;font-weight:900;
+  padding:2px 5px;border-radius:5px;
+  background:rgba(0,0,0,.3);
+}
+.gc-pts.pos{color:#7affaa}
+.gc-pts.neg{color:#ff7090}
+.gc-pts.neu{color:rgba(255,255,255,.5)}
+
+/* Emoji central */
+.gc-em{font-size:2.4rem;line-height:1;margin:2px 0 4px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5))}
+
+/* Nom */
+.gc-nm{
+  font-size:.75rem;font-weight:900;text-align:center;color:#fff;
+  line-height:1.15;text-shadow:0 1px 4px rgba(0,0,0,.8);
+  margin-bottom:3px;
+}
+/* Description */
+.gc-dc{
+  font-size:.6rem;color:rgba(255,255,255,.55);text-align:center;
+  line-height:1.25;font-family:'Nunito Sans',sans-serif;
+}
+
+/* Pré-requis badge */
+.gc-req{
+  position:absolute;bottom:7px;left:0;right:0;text-align:center;
+  font-size:.5rem;color:rgba(255,255,255,.35);letter-spacing:.04em;
+  text-transform:uppercase;z-index:3;
+}
+
+/* actions bar */
+#act-bar{display:flex;gap:7px;padding:7px 12px 10px;border-top:1px solid var(--border);flex-shrink:0}
+
+/* ══════ CHAT ══════ */
+#chat-panel{display:none;flex:1;flex-direction:column;overflow:hidden}
+#chat-panel.active{display:flex}
+#chat-msgs{padding:10px 14px;display:flex;flex-direction:column;gap:6px}
+.chat-msg{display:flex;gap:8px;align-items:flex-start}
+.chat-msg.mine{flex-direction:row-reverse}
+.cm-em{font-size:1.25rem;flex-shrink:0;margin-top:2px}
+.cm-body{max-width:72%}
+.cm-name{font-size:.6rem;color:var(--muted);margin-bottom:2px;font-weight:700}
+.chat-msg.mine .cm-name{text-align:right}
+.cm-text{padding:7px 11px;border-radius:12px;font-size:.85rem;line-height:1.4;word-break:break-word;background:var(--surf2);border:1px solid var(--border)}
+.chat-msg.mine .cm-text{background:rgba(245,192,64,.12);border-color:rgba(245,192,64,.22)}
+.chat-sys{text-align:center;font-size:.7rem;color:var(--muted);padding:2px 0}
+#chat-input-row{display:flex;gap:8px;padding:8px 12px 10px;border-top:1px solid var(--border);flex-shrink:0}
+#chat-input-row input{padding:9px 12px;font-size:.85rem}
+#btn-send{padding:9px 14px;border-radius:30px;background:var(--accent);color:#000;font-weight:800;border:none;cursor:pointer;font-size:.82rem;flex-shrink:0}
+
+/* ══════ TARGET ══════ */
+#target-modal{display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.75);align-items:flex-end}
+#target-modal.open{display:flex}
+#target-inner{width:100%;background:var(--surf);border-radius:20px 20px 0 0;padding:18px;display:flex;flex-direction:column;gap:9px}
+#target-inner h3{font-weight:900;font-size:1.05rem}
+.t-row{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--surf2);border:1.5px solid var(--border);border-radius:var(--rs);cursor:pointer;transition:border-color .15s}
+.t-row:active{border-color:var(--red)}
+.t-nm{flex:1;font-weight:700}
+.t-sc{font-weight:900;color:var(--accent);font-size:.88rem}
 
 /* ══════ TOAST ══════ */
-#toast { position:fixed; top:14px; left:50%; transform:translateX(-50%) translateY(-40px); background:var(--surf); border:1.5px solid var(--border); border-radius:30px; padding:8px 16px; font-size:.82rem; font-weight:600; z-index:200; opacity:0; transition:all .25s; pointer-events:none; white-space:nowrap; max-width:90vw; }
-#toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+#toast{position:fixed;top:14px;left:50%;transform:translateX(-50%) translateY(-40px);background:var(--surf);border:1.5px solid var(--border2);border-radius:30px;padding:8px 16px;font-size:.82rem;font-weight:700;z-index:200;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;max-width:90vw}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 /* ══════ GAMEOVER ══════ */
-#gameover-screen { padding:24px; gap:18px; align-items:center; justify-content:center; text-align:center; }
-.sc-table { width:100%; max-width:340px; border-radius:var(--r); overflow:hidden; border:1px solid var(--border); }
-.sc-row   { display:flex; align-items:center; gap:10px; padding:11px 15px; border-bottom:1px solid var(--border); }
-.sc-row:last-child { border-bottom:none; }
-.sc-row.gold { background:rgba(245,197,66,.08); }
-.sc-rk { font-size:1.2rem; min-width:26px; }
-.sc-nm { flex:1; font-weight:600; }
-.sc-pt { font-weight:800; color:var(--accent); }
+#gameover-screen{padding:24px;gap:16px;align-items:center;justify-content:center;text-align:center;overflow-y:auto}
+.go-title{font-size:2rem;font-weight:900;letter-spacing:-.5px}
+.sc-table{width:100%;max-width:340px;border-radius:var(--r);overflow:hidden;border:1px solid var(--border)}
+.sc-row{display:flex;align-items:center;gap:10px;padding:11px 15px;border-bottom:1px solid var(--border)}
+.sc-row:last-child{border-bottom:none}
+.sc-row.gold{background:rgba(245,192,64,.08)}
+.sc-rk{font-size:1.2rem;min-width:26px}
+.sc-nm{flex:1;font-weight:700}
+.sc-pt{font-weight:900;color:var(--accent)}
+
+/* Stats fin de partie */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:340px}
+.stat-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--rs);padding:10px 12px;text-align:center}
+.stat-val{font-size:1.5rem;font-weight:900;color:var(--accent);line-height:1}
+.stat-lbl{font-size:.65rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-top:3px}
 </style>
 </head>
 <body>
@@ -243,14 +299,19 @@ input::placeholder { color:var(--muted); }
 
 <!-- ══ CONNECT ══ -->
 <div id="connect-screen" class="screen active">
-  <div><div class="title">Smile<span class="accent">Life</span></div><p style="color:var(--muted);font-size:.88rem;margin-top:4px">Réussis ta vie… en pourrissant celle des autres 😄</p></div>
+  <div class="logo">Smile<span>Life</span> 😊</div>
+  <p style="color:var(--muted);font-size:.88rem">Réussis ta vie… en pourrissant celle des autres</p>
   <div class="panel">
-    <div class="label" style="margin-bottom:6px">Ton prénom</div>
-    <input id="input-name" placeholder="Entre ton prénom" maxlength="16" autocomplete="off">
+    <div>
+      <div class="lbl">Ton prénom</div>
+      <input id="input-name" placeholder="Entre ton prénom" maxlength="16" autocomplete="off">
+    </div>
     <button class="btn btn-p btn-full" id="btn-create">Créer une partie</button>
     <div class="or">ou</div>
-    <div class="label" style="margin-bottom:6px">Rejoindre avec un code</div>
-    <input id="input-code" placeholder="XXXX" maxlength="4" autocomplete="off">
+    <div>
+      <div class="lbl">Rejoindre avec un code</div>
+      <input id="input-code" placeholder="XXXX" maxlength="4" autocomplete="off">
+    </div>
     <button class="btn btn-g btn-full" id="btn-join">Rejoindre</button>
   </div>
 </div>
@@ -258,24 +319,24 @@ input::placeholder { color:var(--muted); }
 <!-- ══ LOBBY ══ -->
 <div id="lobby-screen" class="screen">
   <div id="lobby-top">
-    <div class="title">Smile<span class="accent">Life</span></div>
+    <div class="logo">Smile<span style="color:var(--accent)">Life</span></div>
     <div style="flex:1"></div>
     <button class="btn btn-p btn-sm" id="btn-start-game" disabled>Lancer</button>
   </div>
-  <div class="scrollable"><div id="lobby-scroll">
+  <div class="scroll"><div id="lobby-body">
     <div class="code-box">
-      <div class="label">Code de la salle</div>
+      <div class="lbl">Code de la salle</div>
       <div class="code-val" id="display-code">????</div>
-      <div class="code-url muted" id="display-url"></div>
+      <div class="code-url" id="display-url"></div>
     </div>
     <div>
-      <div class="label" style="margin-bottom:8px">Joueurs (<span id="p-cnt">0</span>/6)</div>
+      <div class="lbl" style="margin-bottom:8px">Joueurs (<span id="p-cnt">0</span>/6)</div>
       <div id="lobby-players" style="display:flex;flex-direction:column;gap:6px"></div>
     </div>
     <div>
-      <div class="label" style="margin-bottom:8px">Extensions</div>
+      <div class="lbl" style="margin-bottom:8px">Extensions</div>
       <div id="ext-grid" style="display:flex;flex-direction:column;gap:7px"></div>
-      <p id="ext-hint" style="font-size:.72rem;color:var(--muted);margin-top:6px"></p>
+      <p id="ext-hint" style="font-size:.7rem;color:var(--muted);margin-top:6px"></p>
     </div>
   </div></div>
 </div>
@@ -283,12 +344,19 @@ input::placeholder { color:var(--muted); }
 <!-- ══ GAME ══ -->
 <div id="game-screen" class="screen">
   <div id="g-top">
-    <span class="g-brand">Smile<span class="accent">Life</span></span>
-    <div class="g-turn">Tour de <strong id="turn-nm">—</strong></div>
-    <div class="g-deck" id="deck-nm">—</div>
+    <span class="g-brand">Smile<span>Life</span></span>
+    <div id="g-turn">Tour de <strong id="turn-nm">—</strong></div>
+    <!-- Timer -->
+    <div id="timer-wrap">
+      <svg id="timer-svg" viewBox="0 0 34 34">
+        <circle id="timer-bg" cx="17" cy="17" r="14"/>
+        <circle id="timer-arc" cx="17" cy="17" r="14" stroke-dasharray="87.96" stroke-dashoffset="0"/>
+      </svg>
+      <div id="timer-num">60</div>
+    </div>
+    <div style="font-size:.72rem;color:var(--muted)" id="deck-nm">—</div>
   </div>
 
-  <!-- Tabs -->
   <div id="tab-bar">
     <div class="tab active" data-tab="game-panel">🎮 Jeu</div>
     <div class="tab" data-tab="chat-panel">💬 Chat <span id="chat-badge">0</span></div>
@@ -296,19 +364,18 @@ input::placeholder { color:var(--muted); }
 
   <!-- Game tab -->
   <div id="game-panel" class="tab-panel active">
-    <div class="scrollable" id="game-scroll">
+    <div class="scroll" id="game-scroll">
       <div id="game-body">
         <div id="opps"></div>
         <div id="my-zone">
           <div id="my-hd"><span id="my-em">😄</span><span id="my-nm">Moi</span><span id="my-sc">😊 0</span></div>
           <div id="my-life"></div>
         </div>
-        <!-- Log -->
-        <div style="margin:4px 0 0;background:var(--surf);border-radius:var(--rs);padding:8px 10px;max-height:75px;overflow-y:auto;font-size:.71rem;" id="log-box"></div>
+        <div id="log-box"></div>
       </div>
     </div>
     <div id="hand-hd">
-      <span class="label">Main (<span id="hand-cnt">0</span>)</span>
+      <span class="lbl">Main (<span id="hand-cnt">0</span>)</span>
       <span id="sel-nm">—</span>
     </div>
     <div id="hand-row"></div>
@@ -321,9 +388,9 @@ input::placeholder { color:var(--muted); }
 
   <!-- Chat tab -->
   <div id="chat-panel" class="tab-panel">
-    <div class="scrollable" id="chat-scroll"><div id="chat-msgs"></div></div>
+    <div class="scroll" id="chat-scroll"><div id="chat-msgs"></div></div>
     <div id="chat-input-row">
-      <input id="chat-input" placeholder="Envoyer un message…" maxlength="200" autocomplete="off">
+      <input id="chat-input" placeholder="Message…" maxlength="200" autocomplete="off">
       <button id="btn-send">Envoyer</button>
     </div>
   </div>
@@ -340,20 +407,91 @@ input::placeholder { color:var(--muted); }
 
 <!-- ══ GAMEOVER ══ -->
 <div id="gameover-screen" class="screen">
-  <div class="title">Partie terminée 🎉</div>
+  <div style="font-size:2.5rem">🎉</div>
+  <div class="go-title">Partie terminée !</div>
   <p id="winner-line" style="color:var(--muted);font-size:1rem"></p>
   <div class="sc-table" id="sc-table"></div>
+  <div class="stats-grid" id="stats-grid"></div>
   <button class="btn btn-p" id="btn-replay">Rejouer</button>
 </div>
 
 <script>
-// ── WS ──────────────────────────────────────────────────────────────────
+// ── Audio ─────────────────────────────────────────────────────────────────────
+const AC = window.AudioContext || window.webkitAudioContext;
+let ac = null;
+function getAC() { if (!ac) { try { ac = new AC(); } catch(e){} } return ac; }
+
+function playTone(freq, dur, type='sine', vol=0.25) {
+  const ctx = getAC(); if (!ctx) return;
+  const o = ctx.createOscillator();
+  const g = ctx.createGain();
+  o.connect(g); g.connect(ctx.destination);
+  o.type = type; o.frequency.value = freq;
+  g.gain.setValueAtTime(vol, ctx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+  o.start(); o.stop(ctx.currentTime + dur);
+}
+
+const SFX = {
+  card:    () => { playTone(440,.08,'sine',.2); setTimeout(()=>playTone(660,.1,'sine',.15),60); },
+  attack:  () => { playTone(180,.15,'sawtooth',.25); setTimeout(()=>playTone(120,.2,'sawtooth',.2),100); },
+  play:    () => { playTone(523,.1,'sine',.2); setTimeout(()=>playTone(659,.1,'sine',.18),80); setTimeout(()=>playTone(784,.15,'sine',.15),160); },
+  discard: () => { playTone(300,.06,'triangle',.15); },
+  win:     () => { [523,659,784,1047].forEach((f,i)=>setTimeout(()=>playTone(f,.2,'sine',.2),i*100)); },
+  timer:   () => { playTone(880,.05,'square',.1); },
+  chat:    () => { playTone(800,.06,'sine',.12); },
+  turn:    () => { playTone(440,.12,'sine',.18); setTimeout(()=>playTone(550,.15,'sine',.15),100); },
+};
+
+// ── Timer ─────────────────────────────────────────────────────────────────────
+const TURN_TIME = 60;
+let timerInterval = null, timerSec = 0;
+const CIRC = 2 * Math.PI * 14; // 87.96
+
+function startTimer() {
+  clearInterval(timerInterval);
+  timerSec = TURN_TIME;
+  updateTimerUI();
+  timerInterval = setInterval(() => {
+    timerSec--;
+    updateTimerUI();
+    if (timerSec <= 10 && timerSec > 0) SFX.timer();
+    if (timerSec <= 0) {
+      clearInterval(timerInterval);
+      if (isMyTurn()) {
+        // auto end turn ou défausse
+        const hand = gs?.myHand || [];
+        if (hand.length > 0 && !gs?.state.hasPlayed) {
+          send({type:'action', action:'discard', uid: hand[0].uid});
+        } else if (gs?.state.hasPlayed) {
+          send({type:'action', action:'endTurn'});
+        }
+      }
+    }
+  }, 1000);
+}
+
+function updateTimerUI() {
+  const num = document.getElementById('timer-num');
+  const arc = document.getElementById('timer-arc');
+  if (!num || !arc) return;
+  num.textContent = Math.max(0, timerSec);
+  const pct = timerSec / TURN_TIME;
+  arc.style.strokeDashoffset = CIRC * (1 - pct);
+  arc.style.stroke = timerSec > 20 ? 'var(--green)' : timerSec > 10 ? 'var(--accent)' : 'var(--red)';
+  num.style.color  = timerSec > 20 ? 'var(--text)'  : timerSec > 10 ? 'var(--accent)' : 'var(--red)';
+}
+
+// ── WS ────────────────────────────────────────────────────────────────────────
 let ws, myId, myRoom, isHost=false;
 let selUid=null, attackUid=null, gs=null, extInfo={};
 let chatUnread=0, chatOpen=false;
+let prevTurnIdx = -1;
+// Stats
+let stats = { cardsPlayed:0, attacks:0, discards:0, turnsPlayed:0 };
 
 function connect() {
-  const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const proto = location.protocol==='https:' ? 'wss:' : 'ws:';
   ws = new WebSocket(`${proto}//${location.host}`);
   ws.onmessage = e => handle(JSON.parse(e.data));
   ws.onclose   = () => toast('Connexion perdue — rechargez');
@@ -371,19 +509,25 @@ function handle(msg) {
   }
   else if (msg.type==='state') {
     gs = msg;
-    if (msg.state.phase==='lobby')   renderLobby(msg.state);
+    if (msg.state.phase==='lobby') renderLobby(msg.state);
     else if (msg.state.phase==='playing') {
       if (!document.getElementById('game-screen').classList.contains('active')) showScreen('game-screen');
+      // Nouveau tour ?
+      if (msg.state.currentIdx !== prevTurnIdx) {
+        prevTurnIdx = msg.state.currentIdx;
+        startTimer();
+        if (isMyTurn()) SFX.turn();
+      }
       renderGame(msg);
     }
   }
-  else if (msg.type==='gameover') renderGameover(msg.scores);
+  else if (msg.type==='gameover') { clearInterval(timerInterval); renderGameover(msg.scores); }
   else if (msg.type==='needTarget') { attackUid=msg.uid; showTargets(); }
   else if (msg.type==='chat')  appendChat(msg);
   else if (msg.type==='error') toast(msg.msg);
 }
 
-// ── Connect screen ───────────────────────────────────────────────────────
+// ── Connect ───────────────────────────────────────────────────────────────────
 document.getElementById('btn-create').onclick = () => {
   const name=document.getElementById('input-name').value.trim();
   if (!name) return toast('Entre ton prénom !');
@@ -396,52 +540,36 @@ document.getElementById('btn-join').onclick = () => {
   if (code.length!==4) return toast('Code à 4 lettres !');
   connect(); ws.onopen=()=>send({type:'join',name,code});
 };
-document.getElementById('input-code').oninput=function(){this.value=this.value.toUpperCase();};
+document.getElementById('input-code').oninput=function(){this.value=this.value.toUpperCase()};
 
-// ── Lobby ────────────────────────────────────────────────────────────────
+// ── Lobby ─────────────────────────────────────────────────────────────────────
 function renderLobby(state) {
-  // Players
-  const pl = document.getElementById('lobby-players');
-  pl.innerHTML='';
+  const pl=document.getElementById('lobby-players'); pl.innerHTML='';
   document.getElementById('p-cnt').textContent=state.players.length;
   state.players.forEach((p,i)=>{
     const el=document.createElement('div'); el.className='p-item';
     el.innerHTML=`<span class="p-em">${p.emoji}</span><span class="p-nm">${p.name}</span>${i===0?'<span class="p-host">Hôte</span>':''}`;
     pl.appendChild(el);
   });
-  // Start btn
   const sb=document.getElementById('btn-start-game');
   sb.disabled=!isHost||state.players.length<2;
   sb.textContent=isHost&&state.players.length>=2?`Lancer (${state.players.length})`:'Lancer';
 
-  // Extensions — reconstruire proprement
-  const grid=document.getElementById('ext-grid');
-  grid.innerHTML='';
+  const grid=document.getElementById('ext-grid'); grid.innerHTML='';
   Object.entries(extInfo).forEach(([key,info])=>{
-    const active=state.extensions.includes(key);
-    const locked=key==='base';
+    const active=state.extensions.includes(key), locked=key==='base';
     const el=document.createElement('div');
-    el.className=['ext-item', active?'on':'', locked?'locked':'', (!locked&&isHost)?'host-clickable':''].filter(Boolean).join(' ');
-    el.innerHTML=`
-      <span class="ext-em">${info.emoji}</span>
-      <div class="ext-inf">
-        <div class="ext-nm">${info.name}${locked?' <span style="opacity:.4;font-size:.65rem">(inclus)</span>':''}</div>
-        <div class="ext-dc">${info.desc}</div>
-      </div>
-      <div class="ext-chk">✓</div>`;
-    // FIX : envoi direct comme type='toggleExtension' (pas type='action')
-    if (!locked && isHost) {
-      el.addEventListener('click', ()=>{ send({type:'toggleExtension', ext:key}); });
-    }
+    el.className=['ext-item',active?'on':'',locked?'locked':'',(!locked&&isHost)?'host-clickable':''].filter(Boolean).join(' ');
+    el.innerHTML=`<span class="ext-em">${info.emoji}</span><div class="ext-inf"><div class="ext-nm">${info.name}${locked?' <span style="opacity:.4;font-size:.62rem">(inclus)</span>':''}</div><div class="ext-dc">${info.desc}</div></div><div class="ext-chk">✓</div>`;
+    if (!locked && isHost) el.addEventListener('click',()=>send({type:'toggleExtension',ext:key}));
     grid.appendChild(el);
   });
 }
-
 document.getElementById('btn-start-game').onclick=()=>send({type:'start'});
 
-// ── Game render ──────────────────────────────────────────────────────────
-const myIdx   = ()=> gs?.state.players.findIndex(p=>p.id===myId) ?? -1;
-const isMyTurn= ()=> gs?.state.currentIdx===myIdx();
+// ── Game render ───────────────────────────────────────────────────────────────
+const myIdx    = ()=> gs?.state.players.findIndex(p=>p.id===myId) ?? -1;
+const isMyTurn = ()=> gs?.state.currentIdx===myIdx();
 
 function renderGame(msg) {
   const s=msg.state, hand=msg.myHand||[];
@@ -452,29 +580,23 @@ function renderGame(msg) {
 
   // My zone
   if (myP) {
-    document.getElementById('my-em').textContent = myP.emoji;
-    document.getElementById('my-nm').textContent = myP.name;
-    document.getElementById('my-sc').textContent = `😊 ${myP.smiles}`;
+    document.getElementById('my-em').textContent=myP.emoji;
+    document.getElementById('my-nm').textContent=myP.name;
+    document.getElementById('my-sc').textContent=`😊 ${myP.smiles}`;
     const lf=document.getElementById('my-life'); lf.innerHTML='';
-    if (myP.shielded>0) { const c=document.createElement('div'); c.className='mini-card mc-event'; c.innerHTML=`<span>🛡️</span><span>×${myP.shielded}</span>`; lf.appendChild(c); }
+    if (myP.shielded>0) { const c=document.createElement('div'); c.className='mc mc-event'; c.innerHTML=`<span>🛡️</span><span>×${myP.shielded}</span>`; lf.appendChild(c); }
     myP.life.forEach(c=>lf.appendChild(miniCard(c)));
-    if (!myP.life.length&&!myP.shielded) lf.innerHTML='<span style="color:var(--muted);font-size:.75rem">Aucune carte posée</span>';
+    if (!myP.life.length&&!myP.shielded) lf.innerHTML='<span style="color:var(--muted);font-size:.72rem">Aucune carte posée</span>';
   }
 
-  // Opps
+  // Opponents
   const oa=document.getElementById('opps'); oa.innerHTML='';
   s.players.forEach((p,i)=>{
     if (p.id===myId) return;
     const el=document.createElement('div'); el.className=`opp${i===s.currentIdx?' cur':''}`;
     const cards=p.life.map(c=>miniCard(c).outerHTML).join('');
-    const shield=p.shielded>0?`<div class="mini-card mc-event"><span>🛡️</span><span>×${p.shielded}</span></div>`:'';
-    el.innerHTML=`
-      <div class="opp-hd">
-        <span class="opp-em">${p.emoji}</span><span class="opp-nm">${p.name}</span>
-        <span class="opp-cnt muted">${p.handCount}🃏</span>
-        <span class="opp-sc">😊 ${p.smiles}</span>
-      </div>
-      <div class="opp-life">${shield}${cards||'<span style="color:var(--muted);font-size:.72rem">—</span>'}</div>`;
+    const shield=p.shielded>0?`<div class="mc mc-event"><span>🛡️</span><span>×${p.shielded}</span></div>`:'';
+    el.innerHTML=`<div class="opp-hd"><span class="opp-em">${p.emoji}</span><span class="opp-nm">${p.name}</span><span class="opp-cards" style="color:var(--muted);font-size:.68rem">${p.handCount}🃏</span><span class="opp-sc">😊 ${p.smiles}</span></div><div class="opp-life">${shield}${cards||'<span style="color:var(--muted);font-size:.7rem">—</span>'}</div>`;
     oa.appendChild(el);
   });
 
@@ -484,33 +606,32 @@ function renderGame(msg) {
   hand.forEach(card=>{
     const el=makeCard(card);
     if (selUid===card.uid) el.classList.add('sel');
-    el.onclick=()=>{ selUid=selUid===card.uid?null:card.uid; renderGame(msg); };
+    el.onclick=()=>{ SFX.card(); selUid=selUid===card.uid?null:card.uid; renderGame(msg); };
     hr.appendChild(el);
   });
   const sc=hand.find(c=>c.uid===selUid);
   document.getElementById('sel-nm').textContent=sc?sc.name:'—';
 
-  // Buttons
   const t=isMyTurn();
-  document.getElementById('btn-play').disabled = !t||!selUid||s.hasPlayed;
-  document.getElementById('btn-disc').disabled = !t||!selUid||s.hasPlayed;
-  document.getElementById('btn-end').disabled  = !t||!s.hasPlayed;
+  document.getElementById('btn-play').disabled=!t||!selUid||s.hasPlayed;
+  document.getElementById('btn-disc').disabled=!t||!selUid||s.hasPlayed;
+  document.getElementById('btn-end').disabled =!t||!s.hasPlayed;
 
   // Log
   const lb=document.getElementById('log-box'); lb.innerHTML='';
   s.log.forEach(e=>{
-    const d=document.createElement('div');
-    d.style.cssText='padding:1px 0;border-bottom:1px solid rgba(255,255,255,.04);';
+    const d=document.createElement('div'); d.className='log-ln';
     if (e.kind==='good') d.style.color='var(--green)';
     else if (e.kind==='bad')  d.style.color='var(--red)';
     else if (e.kind==='info') d.style.color='var(--accent)';
+    else d.style.color='var(--muted)';
     d.textContent=e.msg; lb.appendChild(d);
   });
 }
 
 function miniCard(c) {
   const el=document.createElement('div');
-  el.className=`mini-card mc-${c.cat}`;
+  el.className=`mc mc-${c.cat}`;
   el.innerHTML=`<span>${c.emoji}</span><span>${c.name}</span>`;
   return el;
 }
@@ -518,31 +639,51 @@ function miniCard(c) {
 function makeCard(card) {
   const el=document.createElement('div');
   el.className=`gc gc-${card.cat}`;
-  const pts=card.smiles>0?`+${card.smiles} 😊`:card.smiles<0?`${card.smiles} 💀`:'';
-  const badge=card.type==='attack'?'attaque':card.type==='event'?'event':'vie';
+  const pts = card.smiles>0?`+${card.smiles} 😊`:card.smiles<0?`${card.smiles} 💀`:'';
+  const ptsClass = card.smiles>0?'pos':card.smiles<0?'neg':'neu';
+  const typeLabel = card.type==='attack'?'⚔ attaque':card.type==='event'?'✦ événement':'♦ vie';
   el.innerHTML=`
-    <div class="gc-pts">${pts}</div>
-    <div class="gc-em">${card.emoji}</div>
-    <div class="gc-nm">${card.name}</div>
-    <div class="gc-dc">${card.desc}</div>
-    <div class="gc-tp">${badge}</div>`;
+    <div class="gc-inner">
+      <div class="gc-head">
+        <span class="gc-type">${typeLabel}</span>
+        ${pts?`<span class="gc-pts ${ptsClass}">${pts}</span>`:''}
+      </div>
+      <div class="gc-em">${card.emoji}</div>
+      <div class="gc-nm">${card.name}</div>
+      <div class="gc-dc">${card.desc}</div>
+      ${card.req?`<div class="gc-req">Nécessite: ${card.req}</div>`:''}
+    </div>`;
   return el;
 }
 
-// ── Actions ──────────────────────────────────────────────────────────────
-document.getElementById('btn-play').onclick=()=>{ if(!selUid) return; send({type:'action',action:'playCard',uid:selUid}); selUid=null; };
-document.getElementById('btn-disc').onclick=()=>{ if(!selUid) return; send({type:'action',action:'discard',uid:selUid}); selUid=null; };
-document.getElementById('btn-end').onclick =()=> send({type:'action',action:'endTurn'});
+// ── Actions ───────────────────────────────────────────────────────────────────
+document.getElementById('btn-play').onclick=()=>{
+  if (!selUid) return;
+  const card=gs?.myHand?.find(c=>c.uid===selUid);
+  if (card?.type==='attack') SFX.attack(); else SFX.play();
+  stats.cardsPlayed++; if(card?.type==='attack') stats.attacks++;
+  send({type:'action',action:'playCard',uid:selUid}); selUid=null;
+};
+document.getElementById('btn-disc').onclick=()=>{
+  if (!selUid) return;
+  SFX.discard(); stats.discards++;
+  send({type:'action',action:'discard',uid:selUid}); selUid=null;
+};
+document.getElementById('btn-end').onclick=()=>{
+  stats.turnsPlayed++;
+  send({type:'action',action:'endTurn'});
+};
 
-// ── Targets ──────────────────────────────────────────────────────────────
+// ── Targets ───────────────────────────────────────────────────────────────────
 function showTargets() {
   if (!gs) return;
   const list=document.getElementById('target-list'); list.innerHTML='';
   gs.state.players.forEach(p=>{
     if (p.id===myId) return;
     const el=document.createElement('div'); el.className='t-row';
-    el.innerHTML=`<span style="font-size:1.35rem">${p.emoji}</span><span class="t-nm">${p.name}</span><span class="t-sc">😊 ${p.smiles}</span>`;
+    el.innerHTML=`<span style="font-size:1.3rem">${p.emoji}</span><span class="t-nm">${p.name}</span><span class="t-sc">😊 ${p.smiles}</span>`;
     el.onclick=()=>{
+      SFX.attack();
       send({type:'action',action:'attackTarget',uid:attackUid,targetId:p.id});
       document.getElementById('target-modal').classList.remove('open');
       attackUid=null; selUid=null;
@@ -553,28 +694,25 @@ function showTargets() {
 }
 document.getElementById('btn-cancel-target').onclick=()=>{ document.getElementById('target-modal').classList.remove('open'); attackUid=null; selUid=null; };
 
-// ── Chat ─────────────────────────────────────────────────────────────────
+// ── Chat ──────────────────────────────────────────────────────────────────────
 function appendChat(msg) {
-  const isSystem=!msg.from;
   const cm=document.getElementById('chat-msgs');
   const el=document.createElement('div');
-  if (isSystem) {
-    el.className='chat-sys'; el.textContent=msg.text;
-  } else {
+  if (!msg.from) { el.className='chat-sys'; el.textContent=msg.text; }
+  else {
+    SFX.chat();
     const mine=msg.from===gs?.state.players.find(p=>p.id===myId)?.name;
     el.className=`chat-msg${mine?' mine':''}`;
     el.innerHTML=`<span class="cm-em">${msg.emoji||'💬'}</span><div class="cm-body"><div class="cm-name">${msg.from}</div><div class="cm-text">${escHtml(msg.text)}</div></div>`;
   }
   cm.appendChild(el);
   document.getElementById('chat-scroll').scrollTop=9999;
-  // Badge
   if (!chatOpen) {
     chatUnread++;
-    const badge=document.getElementById('chat-badge');
-    badge.style.display='inline'; badge.textContent=chatUnread;
+    const b=document.getElementById('chat-badge');
+    b.style.display='inline'; b.textContent=chatUnread;
   }
 }
-
 function sendChat() {
   const inp=document.getElementById('chat-input');
   const text=inp.value.trim(); if (!text) return;
@@ -582,10 +720,9 @@ function sendChat() {
 }
 document.getElementById('btn-send').onclick=sendChat;
 document.getElementById('chat-input').onkeydown=e=>{ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();} };
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
-function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-// ── Tabs ─────────────────────────────────────────────────────────────────
+// ── Tabs ──────────────────────────────────────────────────────────────────────
 document.querySelectorAll('.tab').forEach(tab=>{
   tab.onclick=()=>{
     const target=tab.dataset.tab;
@@ -595,32 +732,49 @@ document.querySelectorAll('.tab').forEach(tab=>{
     document.getElementById(target).classList.add('active');
     if (target==='chat-panel') {
       chatOpen=true; chatUnread=0;
-      const badge=document.getElementById('chat-badge');
-      badge.style.display='none'; badge.textContent='0';
+      const b=document.getElementById('chat-badge');
+      b.style.display='none'; b.textContent='0';
       document.getElementById('chat-scroll').scrollTop=9999;
     } else { chatOpen=false; }
   };
 });
 
-// ── Gameover ──────────────────────────────────────────────────────────────
+// ── Gameover ──────────────────────────────────────────────────────────────────
 function renderGameover(scores) {
+  SFX.win();
   showScreen('gameover-screen');
   document.getElementById('winner-line').textContent=`🏆 ${scores[0].emoji} ${scores[0].name} — ${scores[0].smiles} 😊`;
+
   const t=document.getElementById('sc-table'); t.innerHTML='';
   ['🥇','🥈','🥉','4️⃣','5️⃣','6️⃣'].slice(0,scores.length).forEach((m,i)=>{
     const r=document.createElement('div'); r.className=`sc-row${i===0?' gold':''}`;
     r.innerHTML=`<span class="sc-rk">${m}</span><span style="font-size:1.2rem">${scores[i].emoji}</span><span class="sc-nm">${scores[i].name}</span><span class="sc-pt">😊 ${scores[i].smiles}</span>`;
     t.appendChild(r);
   });
+
+  // Stats
+  const sg=document.getElementById('stats-grid'); sg.innerHTML='';
+  const myFinal=scores.find((_,i)=>i===scores.findIndex(s=>s.name===gs?.state.players.find(p=>p.id===myId)?.name));
+  const statItems=[
+    {val:stats.cardsPlayed, lbl:'Cartes jouées'},
+    {val:stats.attacks,     lbl:'Attaques lancées'},
+    {val:stats.discards,    lbl:'Cartes défaussées'},
+    {val:stats.turnsPlayed, lbl:'Tours joués'},
+  ];
+  statItems.forEach(s=>{
+    const c=document.createElement('div'); c.className='stat-card';
+    c.innerHTML=`<div class="stat-val">${s.val}</div><div class="stat-lbl">${s.lbl}</div>`;
+    sg.appendChild(c);
+  });
 }
 document.getElementById('btn-replay').onclick=()=>location.reload();
 
-// ── Helpers ───────────────────────────────────────────────────────────────
-function showScreen(id) {
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
-function toast(msg) {
+function toast(msg){
   const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show');
   setTimeout(()=>el.classList.remove('show'),2800);
 }
